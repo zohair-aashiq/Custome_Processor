@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/my_proccessor.iml" filepath="$PROJECT_DIR$/.idea/my_proccessor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi_saifty_lake/nifi-saiftylake-nar/nifi-saiftylake-nar.iml" filepath="$PROJECT_DIR$/nifi_saifty_lake/nifi-saiftylake-nar/nifi-saiftylake-nar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi_saifty_lake/nifi-saiftylake-processors/nifi-saiftylake-processors.iml" filepath="$PROJECT_DIR$/nifi_saifty_lake/nifi-saiftylake-processors/nifi-saiftylake-processors.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi_saifty_lake/nifi_saifty_lake.iml" filepath="$PROJECT_DIR$/nifi_saifty_lake/nifi_saifty_lake.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi_saifty_lake/saifty_lake/saifty_lake.iml" filepath="$PROJECT_DIR$/nifi_saifty_lake/saifty_lake/saifty_lake.iml" />
+    </modules>
+  </component>
+</project>
