@@ -1,0 +1,7 @@
+de/coac/robots/saifty/lake/Transform.class
+de/coac/robots/saifty/lake/Staging.class
+de/coac/robots/saifty/lake/Operations.class
+de/coac/robots/saifty/lake/TablesMaterialization.class
+de/coac/robots/saifty/lake/Integration.class
+de/coac/robots/saifty/lake/Materialization.class
+de/coac/robots/saifty/lake/SaiftyLakeIntialization.class

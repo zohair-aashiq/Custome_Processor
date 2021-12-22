@@ -1,0 +1,661 @@
+drop view if exists ehs_null_tables.sta_v_null_sub_header;
+drop view if exists saifty_1_staging.STA_V_CLEAN_SUB_HEADER;
+drop view if exists saifty_1_staging.STA_V_SOURCE_SUB_HEADER;
+drop view if exists ehs_null_tables.sta_v_null_PROP_VAL;
+drop view if exists saifty_1_staging.STA_V_CLEAN_PROP_VAL;
+drop view if exists saifty_1_staging.STA_V_SOURCE_PROP_VAL;
+drop view if exists ehs_null_tables.sta_v_null_prop_header;
+drop view if exists saifty_1_staging.STA_V_CLEAN_PROP_HEADER;
+drop view if exists saifty_1_staging.STA_V_SOURCE_PROP_HEADER;
+drop view if exists ehs_null_tables.sta_v_null_prop_usage;
+drop view if exists saifty_1_staging.sta_v_clean_prop_usage;
+drop view if exists saifty_1_staging.STA_V_SOURCE_PROP_USAGE;
+drop view if exists ehs_null_tables.STA_V_NULL_COMPOSITION;
+drop view if exists saifty_1_staging.STA_V_CLEAN_COMPOSITION;
+drop view if exists saifty_1_staging.STA_V_SOURCE_PROP_COMPONENT;
+drop view if exists saifty_1_staging.STA_V_LOGIC_COMPOSITIONS;
+drop view if exists saifty_1_staging.STA_V_USE_COMPOSITIONS;
+
+CREATE  VIEW ehs_null_tables.sta_v_null_sub_header
+as
+select
+nullif(`function`, '') `function`,
+nullif(LOGLOCKMOD, '') LOGLOCKMOD,
+nullif(EXTINFO, '') EXTINFO,
+cast(nullif(cast(PRIMARYKEY as string),'')as int) PRIMARYKEY,
+cast(nullif(cast(FOREIGNKEY as string),'')as int) FOREIGNKEY,
+cast(nullif(cast( FLGPRIMKEY as string),'')as int)  FLGPRIMKEY,
+cast(nullif(cast(FLGFRGNKEY as string),'')as int) FLGFRGNKEY,
+nullif(CLIENT , '') CLIENT,
+cast(nullif(cast(RECORD_NO as string),'')as int) RECORD_NO,
+nullif(CHNGSTATUS , '') CHNGSTATUS,
+nullif(VALID_FROM , '') VALID_FROM,
+nullif(VALID_TO , '') VALID_TO,
+nullif(chang_no, '') chang_no,
+nullif(DEL_IND, '') DEL_IND,
+nullif(PARK_IND , '') PARK_IND ,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,
+nullif(CHANGD_BY, '') CHANGD_BY,
+nullif(DATAORIGIN, '') DATAORIGIN,
+nullif(DATA_PROV , '') DATA_PROV ,
+cast(nullif(cast(RECNO_ROOT as string),'')as int) RECNO_ROOT,
+nullif(SUB_CHGDON , '') SUB_CHGDON,
+nullif(SUB_CHGDBY , '') SUB_CHGDBY,
+nullif(SUBSTANCE , '') SUBSTANCE,
+nullif(SUBCATEGRY , '') SUBCATEGRY,
+nullif(SUBAUTHGRP , '') SUBAUTHGRP,
+nullif(NOTE , '') NOTE,
+nullif(SUBCHARACT , '') SUBCHARACT,
+nullif(inserted, '') copied,
+nullif(inserted, '') inserted
+from
+ehs_base_tables.sub_header;
+
+CREATE  view saifty_1_staging.STA_V_CLEAN_SUB_HEADER
+AS
+select
+  	  	"sys" as `SYSTEM`,
+  	  	`sta_v_null_sub_header`.`function`,
+  	  	`sta_v_null_sub_header`.`loglockmod`,
+  	  	`sta_v_null_sub_header`.`extinfo`,
+  	  	`sta_v_null_sub_header`.`primarykey`,
+  	  	`sta_v_null_sub_header`.`foreignkey`,
+  	  	`sta_v_null_sub_header`.`flgprimkey`,
+  	  	`sta_v_null_sub_header`.`flgfrgnkey`,
+  	  	`sta_v_null_sub_header`.`client`,
+  	  	`sta_v_null_sub_header`.`record_no`,
+  	  	`sta_v_null_sub_header`.`chngstatus`,
+  	  	cast(substring(from_unixtime(unix_timestamp(`sta_v_null_sub_header`.`valid_from`, 'yyyy-MM-dd')),1,10) as DATE) `VALID_FROM`,
+  	  	cast(substring(from_unixtime(unix_timestamp(`sta_v_null_sub_header`.`valid_to`, 'MM/dd/yyyy')),1,10) as DATE) `VALID_TO`,
+  	  	cast(substring(from_unixtime(unix_timestamp(`sta_v_null_sub_header`.`created_on`, 'MM/dd/yyyy')),1,10) as DATE) `Created_on`,
+  	  	`sta_v_null_sub_header`.`chang_no` `chang_no`,
+  	  	`sta_v_null_sub_header`.`del_ind` `DEL_IND`,
+  	  	`sta_v_null_sub_header`.`park_ind` `PARK_IND`,
+  	  	`sta_v_null_sub_header`.`created_by` `CREATED_BY`,
+  	  	cast(substring(from_unixtime(unix_timestamp(`sta_v_null_sub_header`.`changd_on`, 'MM/dd/yyyy')),1,10) as DATE) `changd_on`,
+  	  	`sta_v_null_sub_header`.`changd_by` `CHANGD_BY`,
+  	  	`sta_v_null_sub_header`.`dataorigin` `DATAORIGIN`,
+  	  	`sta_v_null_sub_header`.`data_prov` `DATA_PROV`,
+  	  	`RECNO_ROOT`,
+  	  	cast(substring(from_unixtime(unix_timestamp(`sta_v_null_sub_header`.`sub_chgdon`, 'MM/dd/yyyy')),1,10) as DATE) `SUB_CHGDON`,
+  	  	`sta_v_null_sub_header`.`sub_chgdby` `SUB_CHGDBY`,
+  	  	`sta_v_null_sub_header`.`substance` `SUBSTANCE`,
+  	  	`sta_v_null_sub_header`.`subcategry` `SUBCATEGRY`,
+  	  	`sta_v_null_sub_header`.`subauthgrp` `SUBAUTHGRP`,
+  	  	`sta_v_null_sub_header`.`note` `NOTE`,
+  	  	`sta_v_null_sub_header`.`subcharact` `SUBCHARACT`,
+  	  	cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'MM/dd/yyyy')),1,10) as DATE) `COPIED`,
+  	  	cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'MM/dd/yyyy')),1,10) as DATE) `inserted`
+  	  	from `ehs_null_tables`.`sta_v_null_SUB_HEADER`
+  	  	where
+  	  	`sta_v_null_sub_header`.`primarykey` is not null and
+  	  	`sta_v_null_sub_header`.`record_no` is not null
+  	  	and `sta_v_null_sub_header`.`valid_from` is not null
+  	  	and `sta_v_null_sub_header`.`record_no` > 0
+  	  	and `sta_v_null_sub_header`.`subcategry` is not null;
+
+CREATE  view saifty_1_staging.STA_V_SOURCE_SUB_HEADER
+as
+select distinct
+SYSTEM,`FUNCTION`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,CREATED_BY,CHANGD_ON,CHANGD_BY,DATAORIGIN,DATA_PROV,RECNO_ROOT,SUB_CHGDON,SUB_CHGDBY,SUBSTANCE,SUBCATEGRY,SUBAUTHGRP,NOTE,SUBCHARACT,INSERTED
+COPIED from saifty_1_staging.STA_V_CLEAN_SUB_HEADER;
+
+create view ehs_null_tables.sta_v_null_prop_val
+as
+select
+ nullif( `function`,'')  `function`,
+nullif(LOGLOCKMOD,'')  LOGLOCKMOD,
+nullif(EXTINFO,'') EXTINFO,
+nullif(cast(PRIMARYKEY as string),'') PRIMARYKEY,
+nullif(cast(FOREIGNKEY as string),'')  FOREIGNKEY,
+nullif(FLGPRIMKEY,'') FLGPRIMKEY,
+nullif(FLGFRGNKEY,'') FLGFRGNKEY,
+nullif(cast(RECORD_NO as string),'') RECORD_NO,
+nullif(CHNGSTATUS, '') CHNGSTATUS,
+nullif(CLIENT, '') CLIENT,
+nullif(VALID_FROM, '') VALID_FROM,
+nullif(VALID_TO, '') VALID_TO,
+nullif(CHANG_NO,'') CHANG_NO,
+nullif(DEL_IND,'') DEL_IND,
+nullif(PARK_IND,'') PARK_IND,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,
+nullif(CHANGD_BY, '') CHANGD_BY,
+nullif(DATAORIGIN, '') DATAORIGIN,
+nullif(DATA_PROV, '') DATA_PROV,
+nullif(cast(RECNO_ROOT as string),'') RECNO_ROOT,
+nullif(cast(REF_RECNVH as string),'') REF_RECNVH,
+nullif(cast(sequence as string),'') sequence,
+nullif(REFQNTITY, '') REFQNTITY,
+nullif(cast(REF_RECNRH as string),'')  REF_RECNRH,
+
+nullif( IS_SOURCE_OF_A_HEREDITY,'')  IS_SOURCE_OF_A_HEREDITY,
+nullif(OVERWRITTEN_INHERITED_RECORD,'')  	 OVERWRITTEN_INHERITED_RECORD,
+nullif(EXCLUDED_INHERITED_RECORD,'') EXCLUDED_INHERITED_RECORD,
+nullif(RECNO_TEMPLATE,'') RECNO_TEMPLATE,
+nullif(REF_RECNVA_SOURCE,'') REF_RECNVA_SOURCE,
+
+nullif( REF_RECNVA_ORIGINAL,'')  REF_RECNVA_ORIGINAL,
+nullif( RECNO_ROOT_ORIGINAL,'')  RECNO_ROOT_ORIGINAL,
+nullif(TEMPLATE_SEQUENCE,'') TEMPLATE_SEQUENCE,
+nullif(inserted, '') copied,
+nullif(inserted, '') inserted
+from ehs_base_tables.prop_val;
+
+CREATE  view saifty_1_staging.sta_v_clean_prop_val
+as
+select
+"sys" as SYSTEM,
+`function`,
+LOGLOCKMOD,
+EXTINFO,
+PRIMARYKEY,
+FOREIGNKEY,
+FLGPRIMKEY,
+FLGFRGNKEY,
+CLIENT,
+RECORD_NO,
+CHNGSTATUS,
+cast(substring(from_unixtime(unix_timestamp(VALID_FROM, 'yyyy-MM-dd')),1,10) as DATE) VALID_FROM,
+cast(substring(from_unixtime(unix_timestamp(VALID_TO, 'MM/dd/yyyy')),1,10) as DATE) VALID_TO,
+  	  	 CHANG_NO,
+  	  	 DEL_IND,
+  	  	 PARK_IND,
+  	  	cast(substring(from_unixtime(unix_timestamp(Created_on,  'MM/dd/yyyy')),1,10) as DATE) Created_on,
+  	  	 CREATED_BY,
+  	  	cast(substring(from_unixtime(unix_timestamp(changd_on,  'MM/dd/yyyy')),1,10) as DATE) changd_on,
+  	  	 CHANGD_BY,
+  	  	 DATAORIGIN,
+  	  	 DATA_PROV,
+  	  	 RECNO_ROOT,
+
+  	  	 REF_RECNVH,
+  	  	SEQUENCE ,
+  	  	 REFQNTITY,
+  	  	 REF_RECNRH,
+
+  	  	 IS_SOURCE_OF_A_HEREDITY,
+  	  	 OVERWRITTEN_INHERITED_RECORD,
+  	  	 EXCLUDED_INHERITED_RECORD,
+  	  	 RECNO_TEMPLATE,
+  	  	 REF_RECNVA_SOURCE,
+  	  	 REF_RECNVA_ORIGINAL,
+  	  	 RECNO_ROOT_ORIGINAL,
+  	  	 TEMPLATE_SEQUENCE,
+  	  	cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) COPIED,
+		cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) inserted
+  	  	from ehs_null_tables.sta_v_null_prop_val
+  	  	WHERE
+  	  	PRIMARYKEY IS NOT NULL AND
+  	  	RECORD_NO IS NOT NULL
+  	  	AND VALID_FROM IS NOT NULL;
+
+CREATE  VIEW saifty_1_staging.STA_V_SOURCE_PROP_VAL
+AS
+select distinct
+SYSTEM,`FUNCTION`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,CREATED_BY,CHANGD_ON,CHANGD_BY,DATAORIGIN,DATA_PROV,RECNO_ROOT,REF_RECNVH,SEQUENCE,REFQNTITY,REF_RECNRH,IS_SOURCE_OF_A_HEREDITY,OVERWRITTEN_INHERITED_RECORD,EXCLUDED_INHERITED_RECORD,RECNO_TEMPLATE,REF_RECNVA_SOURCE,REF_RECNVA_ORIGINAL,RECNO_ROOT_ORIGINAL,TEMPLATE_SEQUENCE,INSERTED
+,COPIED
+from saifty_1_staging.STA_V_CLEAN_PROP_VAL;
+
+CREATE  VIEW ehs_null_tables.sta_v_null_prop_usage
+as
+select
+nullif(`function`, '') `function`,
+nullif(LOGLOCKMOD, '') LOGLOCKMOD,
+nullif(EXTINFO, '') EXTINFO,
+cast(nullif(cast(PRIMARYKEY as string),'')as int) PRIMARYKEY,
+cast(nullif(cast(FOREIGNKEY as string),'')as int) FOREIGNKEY,
+cast(nullif(cast( FLGPRIMKEY as string),'')as int)  FLGPRIMKEY,
+cast(nullif(cast(FLGFRGNKEY as string),'')as int) FLGFRGNKEY,
+nullif(CLIENT , '') CLIENT,
+cast(nullif(cast(RECORD_NO as string),'')as int) RECORD_NO,
+nullif(CHNGSTATUS , '') CHNGSTATUS,
+nullif(VALID_FROM , '') VALID_FROM,
+nullif(VALID_TO , '') VALID_TO,
+nullif(chang_no, '') chang_no,
+nullif(DEL_IND, '') DEL_IND,
+nullif(PARK_IND , '') PARK_IND ,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,
+nullif(CHANGD_BY, '') CHANGD_BY,
+nullif(DATAORIGIN, '') DATAORIGIN,
+nullif(DATA_PROV , '') DATA_PROV ,
+cast(nullif(cast(RECNO_ROOT as string),'')as int) RECNO_ROOT,
+nullif(MASTERTABL, '') MASTERTABL,
+cast(nullif(cast(REF_RECN as string),'')as int) REF_RECN,
+nullif(RATING, '') RATING,
+nullif(VAL_AREA, '') VAL_AREA,
+nullif(ACT_IND, '') ACT_IND,
+nullif(REL_IND, '') REL_IND,
+nullif(EXCL_IND, '') EXCL_IND,
+cast(nullif(cast(REF_RECNRH as string),'')as int) REF_RECNRH,
+nullif(inserted, '') copied,
+nullif(inserted, '') inserted
+from ehs_base_tables.prop_usage;
+
+CREATE VIEW ehs_null_tables.sta_v_null_PROP_HEADER
+as
+select
+nullif(`function`, '') `function`,
+nullif(LOGLOCKMOD, '') LOGLOCKMOD,
+nullif(EXTINFO, '') EXTINFO,
+cast(nullif(cast(PRIMARYKEY as string),'')as int) PRIMARYKEY,
+cast(nullif(cast(FOREIGNKEY as string),'')as int) FOREIGNKEY,
+cast(nullif(cast( FLGPRIMKEY as string),'')as int)  FLGPRIMKEY,
+cast(nullif(cast(FLGFRGNKEY as string),'')as int) FLGFRGNKEY,
+nullif(CLIENT , '') CLIENT,
+cast(nullif(cast(RECORD_NO as string),'')as int) RECORD_NO,
+nullif(CHNGSTATUS , '') CHNGSTATUS,
+nullif(VALID_FROM , '') VALID_FROM,
+nullif(VALID_TO , '') VALID_TO,
+nullif(chang_no, '') chang_no,
+nullif(DEL_IND, '') DEL_IND,
+nullif(PARK_IND , '') PARK_IND ,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,
+nullif(CHANGD_BY, '') CHANGD_BY,
+nullif(DATAORIGIN, '') DATAORIGIN,
+nullif(DATA_PROV , '') DATA_PROV ,
+cast(nullif(cast(RECNO_ROOT as string),'')as int) RECNO_ROOT,
+nullif(subchacat, '') subchacat,
+nullif(auxcounter, '') auxcounter,
+nullif(ref_recnrh, '') ref_recnrh,
+nullif(inserted , '') inserted
+from ehs_base_tables.PROP_HEADER;
+
+CREATE  VIEW saifty_1_staging.STA_V_CLEAN_PROP_HEADER
+AS
+ select
+"sys" as SYSTEM,
+`function`,
+LOGLOCKMOD,
+EXTINFO EXTINFO,
+PRIMARYKEY,
+FOREIGNKEY,
+FLGPRIMKEY,
+FLGFRGNKEY,
+CLIENT,
+RECORD_NO,
+CHNGSTATUS,
+cast(substring(from_unixtime(unix_timestamp(VALID_FROM, 'yyyy-MM-dd')),1,10) as DATE) VALID_FROM,
+cast(substring(from_unixtime(unix_timestamp(VALID_TO, 'MM/dd/yyyy')),1,10) as DATE) VALID_TO,
+CHANG_NO,
+DEL_IND,
+PARK_IND,
+cast(substring(from_unixtime(unix_timestamp(Created_on,  'MM/dd/yyyy')),1,10) as DATE) Created_on,
+CREATED_BY,
+cast(substring(from_unixtime(unix_timestamp(changd_on,  'MM/dd/yyyy')),1,10) as DATE) changd_on,
+CHANGD_BY,
+DATAORIGIN,
+DATA_PROV,
+RECNO_ROOT,
+subchacat,
+AUXCOUNTER,
+REF_RECNRH,
+cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) COPIED,
+cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) inserted
+from ehs_null_tables.sta_v_null_PROP_HEADER
+where
+PRIMARYKEY IS NOT NULL AND
+RECORD_NO IS NOT NULL
+AND VALID_FROM IS NOT NULL;
+
+CREATE  VIEW saifty_1_staging.STA_V_SOURCE_PROP_HEADER
+AS
+select distinct
+SYSTEM,`FUNCTION`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,
+CREATED_BY,
+CHANGD_ON,
+CHANGD_BY,
+DATAORIGIN,
+DATA_PROV,RECNO_ROOT,SUBCHACAT,AUXCOUNTER,REF_RECNRH,INSERTED
+COPIED
+from saifty_1_staging.STA_V_CLEAN_PROP_HEADER;
+
+
+CREATE  view  saifty_1_staging.sta_v_clean_prop_usage
+as
+select
+  	  	"sys" as SYSTEM,
+  	  	 `function`,
+  	  	 LOGLOCKMOD,
+  	  	 EXTINFO,
+  	  	PRIMARYKEY,
+  	  	FOREIGNKEY,
+  	  	 FLGPRIMKEY,
+  	  	 FLGFRGNKEY,
+  	  	 CLIENT,
+  	  	RECORD_NO,
+  	  	 CHNGSTATUS,
+  	  	cast(substring(from_unixtime(unix_timestamp(VALID_FROM, 'yyyy-MM-dd')),1,10) as DATE) VALID_FROM,
+  	  	cast(substring(from_unixtime(unix_timestamp(VALID_TO, 'MM/dd/yyyy')),1,10) as DATE) VALID_TO,
+  	  	 CHANG_NO,
+  	  	 DEL_IND,
+  	  	 PARK_IND,
+  	  	cast(substring(from_unixtime(unix_timestamp(Created_on,  'MM/dd/yyyy')),1,10) as DATE) Created_on,
+  	  	 CREATED_BY,
+  	  	cast(substring(from_unixtime(unix_timestamp(changd_on,  'MM/dd/yyyy')),1,10) as DATE) changd_on,
+  	  	 CHANGD_BY,
+  	  	DATAORIGIN,
+  	  	 DATA_PROV,
+  	  	RECNO_ROOT,
+  	  	 MASTERTABL,
+  	  	cast(REPLACE(LTRIM(REPLACE(REF_RECN,'0', ' ')),' ', '0') as int) REF_RECN,
+  	  	 RATING,
+  	  	 VAL_AREA,
+  	  	ACT_IND,
+  	  	REL_IND,
+  	  	EXCL_IND,
+  	  	REPLACE(LTRIM(REPLACE(REF_RECNRH,'0', ' ')),' ', '0') REF_RECNRH,
+  	  	cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) COPIED,
+  	  	cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) inserted
+  	  	from ehs_null_tables.sta_v_null_prop_usage
+  	  	WHERE
+  	  	PRIMARYKEY IS NOT NULL AND
+  	  	RECORD_NO IS NOT NULL
+  	  	AND VALID_FROM IS NOT NULL;
+
+CREATE  view saifty_1_staging.STA_V_SOURCE_PROP_USAGE
+AS
+select distinct SYSTEM,`FUNCTION`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,
+CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,
+CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,CREATED_BY,
+CHANGD_ON,CHANGD_BY,DATAORIGIN,DATA_PROV,
+RECNO_ROOT, MASTERTABL, REF_RECN, RATING,
+VAL_AREA, EXCL_IND, ACT_IND, REL_IND,
+REF_RECNRH, INSERTED,
+COPIED
+from saifty_1_staging.STA_V_CLEAN_PROP_USAGE;
+
+CREATE VIEW ehs_null_tables.STA_V_NULL_COMPOSITION
+AS
+select
+"sys" as SYSTEM,
+nullif( `function`,'')  `function`,
+nullif(LOGLOCKMOD,'')  LOGLOCKMOD,
+nullif(EXTINFO,'') EXTINFO,
+nullif(cast(PRIMARYKEY as string),'') PRIMARYKEY,
+nullif(cast(FOREIGNKEY as string),'')  FOREIGNKEY,
+nullif(FLGPRIMKEY,'') FLGPRIMKEY,
+nullif(FLGFRGNKEY,'') FLGFRGNKEY,
+nullif(cast(RECORD_NO as string),'') RECORD_NO,
+nullif(CHNGSTATUS, '') CHNGSTATUS,
+nullif(CLIENT, '') CLIENT,
+nullif(VALID_FROM, '') VALID_FROM,
+nullif(VALID_TO, '') VALID_TO,
+nullif(CHANG_NO,'') CHANG_NO,
+nullif(DEL_IND,'') DEL_IND,
+nullif(PARK_IND,'') PARK_IND,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,
+nullif(CHANGD_BY, '') CHANGD_BY,
+nullif(DATAORIGIN, '') DATAORIGIN,
+nullif(DATA_PROV, '') DATA_PROV,
+nullif(cast(RECNO_ROOT as string),'') RECNO_ROOT,
+nullif(cast(REF_RECNVA as string),'') REF_RECNVA,
+nullif(COMPCAT,'') COMPCAT,
+nullif(COMPROOT,'') COMPROOT,
+nullif(OPLOWLIMIT,'') OPLOWLIMIT,
+cast(nullif(cast(LOW_LIMIT as string),'')as decimal(20,4)) LOW_LIMIT,
+nullif(OPUPPLIMIT,'') OPUPPLIMIT,
+cast(nullif(cast(UPP_LIMIT as string),'')as decimal(20,4)) UPP_LIMIT,
+cast(nullif(cast(AVG_VAL as string),'')as decimal(20,4)) AVG_VAL,
+nullif(EXPONENT,'') EXPONENT,
+nullif(SEQUENCE,'') SEQUENCE,
+nullif(cast(REF_RECNRH as string),'') REF_RECNRH,
+cast(nullif(cast(DECLOWLIMIT as string),'')as int) DECLOWLIMIT,
+cast(nullif(cast(DECUPPLIMIT as string),'')as int) DECUPPLIMIT,
+cast(nullif(cast(DECAVGVAL as string),'')as int) DECAVGVAL,
+nullif(EXCEPT_VAL,'') EXCEPT_VAL,
+inserted
+from  ehs_base_tables.PROP_COMPONENT;
+
+CREATE  VIEW saifty_1_staging.STA_V_CLEAN_COMPOSITION
+AS
+select
+"sys" as SYSTEM,
+`function`,
+LOGLOCKMOD,
+EXTINFO,
+cast(nvl(case(trim(PRIMARYKEY)) when null then 0 else PRIMARYKEY end ,0) as int) PRIMARYKEY,
+cast(nvl(case(trim(FOREIGNKEY)) when null then 0 else FOREIGNKEY end ,0) as int) FOREIGNKEY,
+cast(nvl(case(trim(FLGPRIMKEY)) when null then 0 else FLGPRIMKEY end ,0) as int) FLGPRIMKEY,
+cast(nvl(case(trim(FLGFRGNKEY)) when null then 0 else FLGFRGNKEY end ,0) as int) FLGFRGNKEY,
+cast(nvl(case(trim(RECORD_NO)) when null then 0 else RECORD_NO end ,0) as int) RECORD_NO,
+cast(nvl(case(trim(CHNGSTATUS)) when null then 0 else CHNGSTATUS end ,0) as int) CHNGSTATUS,
+CLIENT,
+cast(substring(from_unixtime(unix_timestamp(VALID_FROM, 'yyyy-mm-dd')),1,10) as DATE) VALID_FROM,
+cast(substring(from_unixtime(unix_timestamp(VALID_TO, 'yyyy-mm-dd')),1,10) as DATE) VALID_TO,
+chang_no,
+DEL_IND,
+PARK_IND,
+cast(substring(from_unixtime(unix_timestamp(CREATED_ON, 'yyyy-mm-dd')),1,10) as DATE) CREATED_ON,
+CREATED_BY,
+cast(substring(from_unixtime(unix_timestamp(CHANGD_ON, 'yyyy-mm-dd')),1,10) as DATE) CHANGD_ON,
+CHANGD_BY,
+DATAORIGIN,
+DATA_PROV,
+cast(nvl(case trim(RECNO_ROOT) when null then 0 else trim(RECNO_ROOT) end ,0)  as int) RECNO_ROOT,
+cast(nvl(case trim(REF_RECNVA) when null then 0 else trim(REF_RECNVA) end ,0)  as int) REF_RECNVA,
+COMPCAT,
+cast(nvl(case trim(COMPROOT) when null then 0 else trim(COMPROOT) end ,0)  as int) COMPROOT,
+OPLOWLIMIT,
+LOW_LIMIT,
+OPUPPLIMIT,
+UPP_LIMIT,
+ AVG_VAL,
+ EXPONENT,
+cast(nvl(case trim(SEQUENCE) when null then 0 else trim(SEQUENCE) end ,0)  as int) SEQUENCE,
+cast(nvl(case trim(REF_RECNRH) when null then 0 else trim(REF_RECNRH) end ,0)  as int) REF_RECNRH,
+cast(nvl(case DECLOWLIMIT when null then 0 else DECLOWLIMIT end ,0)  as int) DECLOWLIMIT,
+cast(nvl(case DECUPPLIMIT when null then 0 else DECUPPLIMIT end ,0)  as int) DECUPPLIMIT,
+cast(nvl(case DECAVGVAL when null then 0 else DECAVGVAL end ,0)  as int) DECAVGVAL,
+EXCEPT_VAL,
+cast(nullif(substring(date_add(current_date,-1),1,10), '') as DATE) copied,
+cast(nullif(substring(date_add(current_date,-1),1,10), '') as DATE) inserted
+from  ehs_null_tables.STA_V_NULL_COMPOSITION
+group by
+`function`,
+LOGLOCKMOD,
+EXTINFO,
+PRIMARYKEY,
+FOREIGNKEY,
+FLGPRIMKEY,
+FLGFRGNKEY,
+RECORD_NO,
+CHNGSTATUS,
+CLIENT,
+VALID_FROM,
+VALID_TO,
+CHANG_NO,
+DEL_IND,
+PARK_IND,
+CREATED_ON,
+CREATED_BY,
+CHANGD_ON,
+CHANGD_BY,
+DATAORIGIN,
+DATA_PROV,
+RECNO_ROOT,
+REF_RECNVA,
+COMPCAT,
+COMPROOT,
+OPLOWLIMIT,
+LOW_LIMIT,
+OPUPPLIMIT,
+UPP_LIMIT,
+AVG_VAL,
+EXPONENT,
+SEQUENCE,
+REF_RECNRH,
+DECLOWLIMIT,
+DECUPPLIMIT,
+DECAVGVAL,
+EXCEPT_VAL;
+
+
+CREATE  VIEW saifty_1_staging.STA_V_SOURCE_PROP_COMPONENT
+AS
+select distinct SYSTEM,`FUNCTION`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,CREATED_BY,CHANGD_ON,CHANGD_BY,DATAORIGIN,DATA_PROV,RECNO_ROOT,REF_RECNVA,COMPCAT,COMPROOT,OPLOWLIMIT,LOW_LIMIT,OPUPPLIMIT,UPP_LIMIT,AVG_VAL,EXPONENT,SEQUENCE,REF_RECNRH,DECLOWLIMIT,DECUPPLIMIT,DECAVGVAL,EXCEPT_VAL,
+INSERTED,COPIED from saifty_1_staging.STA_V_CLEAN_COMPOSITION;
+
+
+
+CREATE  view saifty_1_staging.STA_V_LOGIC_COMPOSITIONS
+AS
+SELECT
+SUHE.SYSTEM SUHE_SYSTEM,
+SUHE.LOGLOCKMOD SUHE_LOGLOCKMOD,
+SUHE.EXTINFO SUHE_EXTINFO,
+SUHE.PRIMARYKEY SUHE_PRIMARYKEY,
+SUHE.FOREIGNKEY SUHE_FOREIGNKEY,
+SUHE.FLGPRIMKEY SUHE_FLGPRIMKEY,
+SUHE.FLGFRGNKEY SUHE_FLGFRGNKEY,
+SUHE.CLIENT SUHE_CLIENT,
+SUHE.RECORD_NO SUHE_RECORD_NO,
+SUHE.CHNGSTATUS SUHE_CHNGSTATUS,
+SUHE.VALID_FROM SUHE_VALID_FROM,
+SUHE.VALID_TO SUHE_VALID_TO,
+SUHE.CHANG_NO SUHE_CHANG_NO,
+SUHE.DEL_IND SUHE_DEL_IND,
+SUHE.PARK_IND SUHE_PARK_IND,
+SUHE.CREATED_ON SUHE_CREATED_ON,
+SUHE.CREATED_BY SUHE_CREATED_BY,
+SUHE.CHANGD_ON SUHE_CHANGD_ON,
+SUHE.CHANGD_BY SUHE_CHANGD_BY,
+SUHE.DATAORIGIN SUHE_DATAORIGIN,
+SUHE.DATA_PROV SUHE_DATA_PROV,
+SUHE.RECNO_ROOT SUHE_RECNO_ROOT,
+SUHE.SUB_CHGDON SUHE_SUB_CHGDON,
+SUHE.SUB_CHGDBY SUHE_SUB_CHGDBY,
+SUHE.SUBSTANCE SUHE_SUBSTANCE,
+SUHE.SUBCATEGRY SUHE_SUBCATEGRY,
+SUHE.SUBAUTHGRP SUHE_SUBAUTHGRP,
+SUHE.NOTE SUHE_NOTE,
+SUHE.SUBCHARACT SUHE_SUBCHARACT,
+SUHE.COPIED SUHE_COPIED,
+PRCO.SYSTEM PRCO_SYSTEM,
+PRCO.LOGLOCKMOD PRCO_LOGLOCKMOD,
+PRCO.EXTINFO PRCO_EXTINFO,
+PRCO.PRIMARYKEY PRCO_PRIMARYKEY,
+PRCO.FOREIGNKEY PRCO_FOREIGNKEY,
+PRCO.FLGPRIMKEY PRCO_FLGPRIMKEY,
+PRCO.FLGFRGNKEY PRCO_FLGFRGNKEY,
+PRCO.CLIENT PRCO_CLIENT,
+PRCO.RECORD_NO PRCO_RECORD_NO,
+PRCO.CHNGSTATUS PRCO_CHNGSTATUS,
+PRCO.VALID_FROM PRCO_VALID_FROM,
+PRCO.VALID_TO PRCO_VALID_TO,
+PRCO.CHANG_NO PRCO_CHANG_NO,
+PRCO.DEL_IND PRCO_DEL_IND,
+PRCO.PARK_IND PRCO_PARK_IND,
+PRCO.CREATED_ON PRCO_CREATED_ON,
+PRCO.CREATED_BY PRCO_CREATED_BY,
+PRCO.CHANGD_ON PRCO_CHANGD_ON,
+PRCO.CHANGD_BY PRCO_CHANGD_BY,
+PRCO.DATAORIGIN PRCO_DATAORIGIN,
+PRCO.DATA_PROV PRCO_DATA_PROV,
+PRCO.RECNO_ROOT PRCO_RECNO_ROOT,
+PRCO.REF_RECNVA PRCO_REF_RECNVA,
+PRCO.COMPCAT PRCO_COMPCAT,
+PRCO.COMPROOT PRCO_COMPROOT,
+PRCO.OPLOWLIMIT PRCO_OPLOWLIMIT,
+PRCO.LOW_LIMIT PRCO_LOW_LIMIT,
+PRCO.OPUPPLIMIT PRCO_OPUPPLIMIT,
+PRCO.UPP_LIMIT PRCO_UPP_LIMIT,
+PRCO.AVG_VAL PRCO_AVG_VAL,
+PRCO.EXPONENT PRCO_EXPONENT,
+PRCO.SEQUENCE PRCO_SEQUENCE,
+PRCO.REF_RECNRH PRCO_REF_RECNRH,
+PRCO.DECLOWLIMIT PRCO_DECLOWLIMIT,
+PRCO.DECUPPLIMIT PRCO_DECUPPLIMIT,
+PRCO.DECAVGVAL PRCO_DECAVGVAL,
+PRCO.EXCEPT_VAL PRCO_EXCEPT_VAL,
+PRCO.COPIED PRCO_COPIED,
+pu.DATAORIGIN PRUS_DATAORIGIN,
+pu.RATING PRUS_RATING,
+pu.VAL_AREA PRUS_VAL_AREA,
+pu.EXCL_IND PRUS_EXCL_IND,
+pu.ACT_IND PRUS_ACT_IND,
+pu.REL_IND PRUS_REL_IND,
+ph.SUBCHACAT PRHE_SUBCHACAT,
+pv.sequence PRVA_SEQUENCE,
+pv.record_no PRVA_RECORD_NO
+from saifty_1_staging.STA_V_SOURCE_SUB_HEADER SUHE inner join saifty_1_staging.STA_V_SOURCE_PROP_COMPONENT PRCO
+  on (SUHE.RECORD_NO = PRCO.RECNO_ROOT and SUHE.system = PRCO.system)
+  inner join saifty_1_staging.STA_V_SOURCE_PROP_VAL pv
+    on(PRCO.ref_recnva = pv.record_no and PRCO.system = pv.system and SUHE.record_no = pv.recno_root and SUHE.system = pv.system)
+    INNER JOIN saifty_1_staging.STA_V_SOURCE_PROP_HEADER PH
+      on(ph.record_no = pv.ref_recnvh and ph.system = pv.system)
+      INNER JOIN saifty_1_staging.STA_V_SOURCE_PROP_USAGE PU
+      ON(pv.RECORD_NO = PU.REF_RECN AND SUHE.SYSTEM = pu.SYSTEM and SUHE.RECORD_NO = pu.RECNO_ROOT and SUHE.SYSTEM = pu.system);
+
+
+CREATE  VIEW saifty_1_staging.STA_V_USE_COMPOSITIONS
+  AS
+  SELECT
+  CAST(SUHE_SYSTEM as varchar(3)) SYSTEM,
+  SUHE_RECNO_ROOT RECNO_ROOT,
+  SUHE_RECORD_NO SUB_RECORD_NO,
+  PRCO_CHANG_NO CHANG_NO,
+  PRCO_DEL_IND DEL_IND,
+  PRCO_PARK_IND PARK_IND,
+  PRCO_CREATED_ON CREATED_ON,
+  PRCO_CREATED_BY CREATED_BY,
+  PRCO_CHANGD_ON CHANGD_ON,
+  PRCO_CHANGD_BY CHANGD_BY,
+  PRCO_DATAORIGIN DATAORIGIN,
+  PRCO_COMPCAT COMPCAT,
+  PRCO_COMPROOT COMPROOT,
+  PRCO_OPLOWLIMIT OPLOWLIMIT,
+  PRCO_LOW_LIMIT LOW_LIMIT,
+  PRCO_OPUPPLIMIT OPUPPLIMIT,
+  PRCO_UPP_LIMIT UPP_LIMIT,
+  PRCO_AVG_VAL AVG_VAL,
+  PRCO_EXPONENT EXPONENT,
+  PRCO_SEQUENCE COMP_SEQUENCE,
+  PRCO_DECLOWLIMIT DECLOWLIMIT,
+  PRCO_DECUPPLIMIT DECUPPLIMIT,
+  PRCO_DECAVGVAL DECAVGVAL,
+  PRCO_EXCEPT_VAL EXCEPT_VAL,
+  PRCO_COPIED COPIED,
+PRUS_RATING RATING,
+PRUS_VAL_AREA VAL_AREA,
+PRUS_EXCL_IND EXCL_IND,
+PRUS_ACT_IND ACT_IND,
+PRUS_REL_IND REL_IND,
+PRHE_SUBCHACAT SUBCHACAT,
+PRVA_SEQUENCE PROP_SEQUENCE,
+PRVA_RECORD_NO PROP_RECORD_NO
+FROM saifty_1_staging.STA_V_LOGIC_COMPOSITIONS;
+
+drop table saifty_1_staging.STA_USE_COMPOSITIONS;
+
+create table saifty_1_staging.STA_USE_COMPOSITIONS
+as
+select * from saifty_1_staging.STA_V_USE_COMPOSITIONS;
+
+
+drop view ehs_null_tables.sta_v_null_sub_header;
+drop view saifty_1_staging.STA_V_CLEAN_SUB_HEADER;
+drop view saifty_1_staging.STA_V_SOURCE_SUB_HEADER;
+drop view ehs_null_tables.sta_v_null_PROP_VAL;
+drop view saifty_1_staging.STA_V_CLEAN_PROP_VAL;
+drop view saifty_1_staging.STA_V_SOURCE_PROP_VAL;
+drop view ehs_null_tables.sta_v_null_prop_header;
+drop view saifty_1_staging.STA_V_CLEAN_PROP_HEADER;
+drop view saifty_1_staging.STA_V_SOURCE_PROP_HEADER;
+drop view ehs_null_tables.sta_v_null_prop_usage;
+drop view saifty_1_staging.sta_v_clean_prop_usage;
+drop view saifty_1_staging.STA_V_SOURCE_PROP_USAGE;
+drop VIEW ehs_null_tables.STA_V_NULL_COMPOSITION;
+drop view saifty_1_staging.STA_V_CLEAN_COMPOSITION;
+drop view saifty_1_staging.STA_V_SOURCE_PROP_COMPONENT;
+drop view saifty_1_staging.STA_V_LOGIC_COMPOSITIONS;
+drop view saifty_1_staging.STA_V_USE_COMPOSITIONS

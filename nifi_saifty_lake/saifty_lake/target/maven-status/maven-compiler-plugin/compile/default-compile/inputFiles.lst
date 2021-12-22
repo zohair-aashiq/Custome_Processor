@@ -1,0 +1,7 @@
+/mnt/f/my_proccessor/nifi_saifty_lake/saifty_lake/src/main/java/de/coac/robots/saifty/lake/Transform.java
+/mnt/f/my_proccessor/nifi_saifty_lake/saifty_lake/src/main/java/de/coac/robots/saifty/lake/TablesMaterialization.java
+/mnt/f/my_proccessor/nifi_saifty_lake/saifty_lake/src/main/java/de/coac/robots/saifty/lake/Operations.java
+/mnt/f/my_proccessor/nifi_saifty_lake/saifty_lake/src/main/java/de/coac/robots/saifty/lake/SaiftyLakeIntialization.java
+/mnt/f/my_proccessor/nifi_saifty_lake/saifty_lake/src/main/java/de/coac/robots/saifty/lake/Materialization.java
+/mnt/f/my_proccessor/nifi_saifty_lake/saifty_lake/src/main/java/de/coac/robots/saifty/lake/Staging.java
+/mnt/f/my_proccessor/nifi_saifty_lake/saifty_lake/src/main/java/de/coac/robots/saifty/lake/Integration.java

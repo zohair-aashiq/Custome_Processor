@@ -1,0 +1,95 @@
+
+drop VIEW if exists ehs_null_tables.sta_v_null_estmj;
+drop view if exists saifty_1_staging.STA_V_CLEAN_ESTMJ;
+drop view if exists saifty_1_staging.STA_V_SOURCE_ESTMJ;
+drop view if exists saifty_1_staging.STA_V_USE_ESTMJ;
+
+CREATE VIEW ehs_null_tables.sta_v_null_estmj
+ AS select  "sys" AS SYSTEM,
+  cast(nullif(cast(RECN as string),'')as int) RECN,
+ cast(nullif(cast(ACTN as string),'')as int) ACTN,
+  nullif(VALFR,'') VALFR,
+  nullif(VALTO, '') VALTO,
+  nullif(AENNR, '') AENNR,
+  nullif(DELFLG, '') DELFLG,
+  nullif(PARKFLG, '') PARKFLG,
+  nullif(CRDAT, '') CRDAT,
+  nullif(CRNAM, '') CRNAM,
+  nullif(UPDDAT, '') UPDDAT,
+  nullif(UPDNAM, '') UPDNAM,
+  nullif(SRSID, '') SRSID,
+  nullif(OWNID, '') OWNID,
+  cast(nullif(cast(RECNROOT as string),'')as int) RECNROOT,
+  nullif(WERKS, '') WERKS,
+  nullif(MATNR, '') MATNR,
+  nullif(INSERTED  , '') INSERTED
+  from  ehs_base_tables.ESTMJ;
+
+CREATE VIEW saifty_1_staging.STA_V_CLEAN_ESTMJ
+  AS
+  select
+	"sys" as system,
+       --cast(REPLACE(LTRIM(REPLACE(COALESCE(substr(RECN,1,length(CAST(RECN as STRING))-20),0), '0', ' ')), ' ', '0') as DECIMAL(20,0)) RECN,
+       --cast(REPLACE(LTRIM(REPLACE(COALESCE(substr(ACTN,1,length(CAST(ACTN as STRING))-20),0), '0', ' ')), ' ', '0') as DECIMAL(20,0)) ACTN,
+	RECN,
+	ACTN,
+	substring(from_unixtime(unix_timestamp(VALFR, 'yyyymmdd')),1,10) VALFR ,
+	substring(from_unixtime(unix_timestamp(VALTO, 'yyyymmdd')),1,10) VALTO ,
+	AENNR ,
+	DELFLG ,
+	PARKFLG ,
+	substring(from_unixtime(unix_timestamp(CRDAT, 'yyyymmdd')),1,10) CRDAT,
+	CRNAM ,
+	substring(from_unixtime(unix_timestamp(UPDDAT, 'yyyymmdd')),1,10) UPDDAT,
+	UPDNAM ,
+	SRSID ,
+	OWNID ,
+	--cast(REPLACE(LTRIM(REPLACE(COALESCE(substr(RECNROOT,1,length(CAST(ACTN as STRING))-20),0), '0', ' ')), ' ', '0')as DECIMAL(20,0)) RECNROOT,
+	RECNROOT,
+	WERKS,
+	MATNR,
+	substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-mm-dd')),1,10) INSERTED,
+	substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-mm-dd')),1,10) COPIED
+  from ehs_null_tables.sta_v_null_estmj
+  where RECNROOT is not null
+  --and inserted is not null
+  group by
+    RECN,
+    ACTN,
+	VALFR ,
+	VALTO ,
+	AENNR ,
+	DELFLG ,
+	PARKFLG ,
+	CRDAT ,
+	CRNAM ,
+	UPDDAT ,
+	UPDNAM ,
+	SRSID ,
+	OWNID ,
+	RECNROOT,
+	WERKS,
+	MATNR,
+	INSERTED;
+
+
+  CREATE VIEW saifty_1_staging.STA_V_SOURCE_ESTMJ
+  AS
+  select distinct SYSTEM,RECN,ACTN,VALFR,VALTO,AENNR,
+  DELFLG,PARKFLG,CRDAT,CRNAM,UPDDAT,UPDNAM,SRSID,OWNID,RECNROOT,
+  WERKS,MATNR,INSERTED,COPIED from saifty_1_staging.STA_V_CLEAN_ESTMJ;
+
+  CREATE VIEW saifty_1_staging.STA_V_USE_ESTMJ
+    AS
+    select SYSTEM,RECN,ACTN,VALFR,VALTO,AENNR,DELFLG,PARKFLG,CRDAT,CRNAM,UPDDAT,UPDNAM,SRSID,OWNID,RECNROOT,WERKS,MATNR,INSERTED,COPIED from saifty_1_staging.STA_V_source_estmj;
+
+drop table saifty_1_staging.STA_USE_ESTMJ;
+
+create table saifty_1_staging.STA_USE_ESTMJ
+as
+select * from saifty_1_staging.STA_V_USE_ESTMJ;
+
+drop VIEW ehs_null_tables.sta_v_null_estmj;
+drop view saifty_1_staging.STA_V_CLEAN_ESTMJ;
+drop view saifty_1_staging.STA_V_SOURCE_ESTMJ;
+drop view saifty_1_staging.STA_V_USE_ESTMJ

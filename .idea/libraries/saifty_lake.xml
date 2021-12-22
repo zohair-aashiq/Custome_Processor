@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="saifty_lake">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/nifi_saifty_lake/saifty_lake" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/nifi_saifty_lake/saifty_lake/src/main/java" />
+    </SOURCES>
+  </library>
+</component>

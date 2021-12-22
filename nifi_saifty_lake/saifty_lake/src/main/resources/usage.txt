@@ -1,0 +1,121 @@
+drop view if exists  ehs_null_tables.sta_v_null_prop_usage;
+drop view if exists  saifty_1_staging.STA_V_USE_USAGE;
+drop view if exists  saifty_1_staging.STA_V_SOURCE_PROP_USAGE;
+drop view if exists  saifty_1_staging.STA_V_CLEAN_PROP_USAGE;
+drop view if exists  ehs_null_tables.sta_v_null_prop_usage;
+
+CREATE VIEW ehs_null_tables.sta_v_null_prop_usage
+as
+select 
+nullif(`function`, '') `function`,
+nullif(LOGLOCKMOD, '') LOGLOCKMOD,
+nullif(EXTINFO, '') EXTINFO, 
+cast(nullif(cast(PRIMARYKEY as string),'')as int) PRIMARYKEY,
+cast(nullif(cast(FOREIGNKEY as string),'')as int) FOREIGNKEY,
+cast(nullif(cast( FLGPRIMKEY as string),'')as int)  FLGPRIMKEY,
+cast(nullif(cast(FLGFRGNKEY as string),'')as int) FLGFRGNKEY,
+nullif(CLIENT , '') CLIENT,
+cast(nullif(cast(RECORD_NO as string),'')as int) RECORD_NO,
+nullif(CHNGSTATUS , '') CHNGSTATUS,
+nullif(VALID_FROM , '') VALID_FROM,
+nullif(VALID_TO , '') VALID_TO,
+nullif(chang_no, '') chang_no,
+nullif(DEL_IND, '') DEL_IND,
+nullif(PARK_IND , '') PARK_IND ,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,  
+nullif(CHANGD_BY, '') CHANGD_BY,  
+nullif(DATAORIGIN, '') DATAORIGIN,  
+nullif(DATA_PROV , '') DATA_PROV ,
+cast(nullif(cast(RECNO_ROOT as string),'')as int) RECNO_ROOT, 
+nullif(MASTERTABL, '') MASTERTABL,
+cast(nullif(cast(REF_RECN as string),'')as int) REF_RECN,
+nullif(RATING, '') RATING,
+nullif(VAL_AREA, '') VAL_AREA,
+nullif(ACT_IND, '') ACT_IND,
+nullif(REL_IND, '') REL_IND,
+nullif(EXCL_IND, '') EXCL_IND,
+cast(nullif(cast(REF_RECNRH as string),'')as int) REF_RECNRH,
+nullif(inserted, '') copied,
+nullif(inserted, '') inserted
+from ehs_base_tables.prop_usage;
+
+
+CREATE view  saifty_1_staging.sta_v_clean_prop_usage
+as
+select 	 
+  	  	"sys" as SYSTEM,
+  	  	 `function`,
+  	  	 LOGLOCKMOD,
+  	  	 EXTINFO,
+  	  	PRIMARYKEY,
+  	  	FOREIGNKEY,
+  	  	 FLGPRIMKEY,
+  	  	 FLGFRGNKEY,
+  	  	 CLIENT,
+  	  	RECORD_NO,
+  	  	 CHNGSTATUS,
+  	  	cast(substring(from_unixtime(unix_timestamp(VALID_FROM, 'yyyy-MM-dd')),1,10) as DATE) VALID_FROM,
+  	  	cast(substring(from_unixtime(unix_timestamp(VALID_TO, 'MM/dd/yyyy')),1,10) as DATE) VALID_TO,
+  	  	 CHANG_NO,
+  	  	 DEL_IND,
+  	  	 PARK_IND,
+  	  	cast(substring(from_unixtime(unix_timestamp(Created_on,  'MM/dd/yyyy')),1,10) as DATE) Created_on,
+  	  	 CREATED_BY,
+  	  	cast(substring(from_unixtime(unix_timestamp(changd_on,  'MM/dd/yyyy')),1,10) as DATE) changd_on,
+  	  	 CHANGD_BY,
+  	  	DATAORIGIN,
+  	  	 DATA_PROV,
+  	  	RECNO_ROOT,
+  	  	 MASTERTABL,
+  	  	cast(REPLACE(LTRIM(REPLACE(REF_RECN,'0', ' ')),' ', '0') as int) REF_RECN,
+  	  	 RATING,
+  	  	 VAL_AREA,
+  	  	ACT_IND,
+  	  	REL_IND,
+  	  	EXCL_IND,
+  	  	REPLACE(LTRIM(REPLACE(REF_RECNRH,'0', ' ')),' ', '0') REF_RECNRH,
+  	  	cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) COPIED,
+  	  	cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE) inserted
+  	  	from ehs_null_tables.sta_v_null_prop_usage
+  	  	WHERE
+  	  	PRIMARYKEY IS NOT NULL AND
+  	  	RECORD_NO IS NOT NULL
+  	  	AND VALID_FROM IS NOT NULL;
+
+CREATE view saifty_1_staging.STA_V_SOURCE_PROP_USAGE 
+AS
+select distinct SYSTEM,`FUNCTION`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,
+CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,
+CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,CREATED_BY,
+CHANGD_ON,CHANGD_BY,DATAORIGIN,DATA_PROV, 
+RECNO_ROOT, MASTERTABL, REF_RECN, RATING, 
+VAL_AREA, EXCL_IND, ACT_IND, REL_IND, 
+REF_RECNRH, INSERTED, 
+COPIED
+from saifty_1_staging.STA_V_CLEAN_PROP_USAGE;
+
+CREATE view saifty_1_staging.STA_V_USE_USAGE 
+ AS 
+  SELECT
+RATING RATING,
+VAL_AREA VALIDITY_AREA,
+EXCL_IND EXCL_IND,
+ACT_IND ACT_IND,
+REL_IND REL_IND,
+max(COPIED) COPIED     
+FROM saifty_1_staging.STA_V_SOURCE_PROP_USAGE
+group by RATING, VAL_AREA, EXCL_IND, ACT_IND, REL_IND;
+
+drop table saifty_1_staging.STA_USE_USAGE;
+
+create table saifty_1_staging.STA_USE_USAGE 
+as 
+select * from saifty_1_staging.STA_V_USE_USAGE;
+
+drop view ehs_null_tables.sta_v_null_prop_usage;
+drop view saifty_1_staging.STA_V_USE_USAGE;
+drop view saifty_1_staging.STA_V_SOURCE_PROP_USAGE;
+drop view saifty_1_staging.STA_V_CLEAN_PROP_USAGE;
+drop view ehs_null_tables.sta_v_null_prop_usage

@@ -1,0 +1,162 @@
+drop view if exists ehs_null_tables.STA_V_null_ESTDH;
+drop view if exists saifty_1_staging.STA_V_CLEAN_ESTDH;
+drop view if exists saifty_1_staging.STA_V_SOURCE_ESTDH;
+drop view if exists saifty_1_staging.STA_V_USE_ESTDH;
+CREATE VIEW ehs_null_tables.STA_V_null_ESTDH
+  AS
+  select
+  "sys" AS SYSTEM,
+  cast(nullif(cast(RECN as string),'')as int) RECN,
+ cast(nullif(cast(ACTN as string),'')as int) ACTN,
+  nullif(VALFR,'') VALFR,
+  nullif(VALTO, '') VALTO,
+  nullif(AENNR, '') AENNR,
+  nullif(DELFLG, '') DELFLG,
+  nullif(PARKFLG, '') PARKFLG,
+  nullif(CRDAT, '') CRDAT,
+  nullif(CRNAM, '') CRNAM,
+  nullif(UPDDAT, '') UPDDAT,
+  nullif(UPDNAM, '') UPDNAM,
+  nullif(SRSID, '') SRSID,
+  nullif(OWNID, '') OWNID,
+  cast(nullif(cast(RECNROOT as string),'')as int) RECNROOT,
+  nullif(SUBID, '') SUBID,
+  nullif(SBGVID, '') SBGVID,
+  nullif(LANGU, '') LANGU,
+  nullif(EHSDOCCAT, '') EHSDOCCAT,
+  cast(nullif(cast(INTVERSION as string),'')as int) INTVERSION,
+  nullif(REPTYPE, '') REPTYPE,
+  nullif(REPSTATUS, '') REPSTATUS,
+  nullif(DMSCAT, '') DMSCAT,
+  cast(nullif(cast(DMSKEY as string),'')as int) DMSKEY,
+  cast(nullif(cast(VERSION as string),'')as int) VERSION,
+  cast(nullif(cast(SUBVERSION as string),'')as int) SUBVERSION,
+  nullif(VALDAT, '') VALDAT,
+  nullif(REQREASON, '') REQREASON,
+  nullif(RELCHGFLG, '') RELCHGFLG,
+  nullif(REM, '') REM,
+  nullif(INSERTED  , '') INSERTED
+  from  ehs_base_tables.ESTDH;
+
+CREATE VIEW saifty_1_staging.STA_V_CLEAN_ESTDH
+  AS
+  select
+  "sys" AS SYSTEM,
+  RECN,
+  ACTN,
+cast(substring(from_unixtime(unix_timestamp(VALFR, 'yyyymmdd')),1,10) as DATE) VALFR,
+cast(substring(from_unixtime(unix_timestamp(VALTO, 'yyyymmdd')),1,10) as DATE) VALTO,
+  AENNR,
+  DELFLG,
+  PARKFLG,
+cast(substring(from_unixtime(unix_timestamp(CRDAT,  'yyyymmdd')),1,10) as DATE) CRDAT,
+  CRNAM,
+cast(substring(from_unixtime(unix_timestamp(UPDDAT,  'yyyymmdd')),1,10) as DATE) UPDDAT,
+  UPDNAM,
+  SRSID,
+  OWNID,
+  RECNROOT,
+  SUBID,
+  SBGVID,
+  LANGU,
+  EHSDOCCAT,
+  INTVERSION,
+  REPTYPE,
+  REPSTATUS,
+  DMSCAT,
+  DMSKEY,
+  VERSION,
+  SUBVERSION,
+  VALDAT,
+  REQREASON,
+  RELCHGFLG,
+  REM,
+cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'MM/dd/yyyy')),1,10) as DATE) `COPIED`,
+cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'MM/dd/yyyy')),1,10) as DATE) `inserted`
+from  ehs_null_tables.sta_v_null_estdh
+group by
+RECN,
+  ACTN,
+  VALFR,
+  VALTO,
+  AENNR,
+  DELFLG,
+  PARKFLG,
+  CRDAT,
+  CRNAM,
+  UPDDAT,
+  UPDNAM,
+  SRSID,
+  OWNID,
+  RECNROOT,
+  SUBID,
+  SBGVID,
+  LANGU,
+  EHSDOCCAT,
+  INTVERSION,
+  REPTYPE,
+  REPSTATUS,
+  DMSCAT,
+  DMSKEY,
+  VERSION,
+  SUBVERSION,
+  VALDAT,
+  REQREASON,
+  RELCHGFLG,
+  REM;
+
+
+ CREATE VIEW saifty_1_staging.STA_V_SOURCE_ESTDH
+  AS
+  select distinct SYSTEM,RECN,ACTN,VALFR,VALTO,AENNR,DELFLG,PARKFLG,CRDAT,CRNAM,UPDDAT,UPDNAM,SRSID,OWNID,RECNROOT,SUBID,SBGVID,
+  LANGU,EHSDOCCAT,INTVERSION,REPTYPE,REPSTATUS,DMSCAT,DMSKEY,VERSION,SUBVERSION,VALDAT,REQREASON,RELCHGFLG,REM,INSERTED,COPIED
+  from saifty_1_staging.STA_V_CLEAN_ESTDH;
+
+
+
+ CREATE VIEW saifty_1_staging.STA_V_USE_ESTDH
+  AS
+  SELECT system,
+ RECN RECORD_NO,
+  ACTN CHNGSTATUS,
+  VALFR VALID_FROM,
+  VALTO VALID_TO,
+  AENNR CHANG_NO,
+  DELFLG DEL_IND,
+  PARKFLG PARK_IND,
+  CRDAT CREATED_ON,
+  CRNAM CREATED_BY,
+  UPDDAT CHANGD_ON,
+  UPDNAM CHANGD_BY,
+  SRSID DATAORIGIN,
+  OWNID OWNER_ID,
+  RECNROOT RECNO_ROOT,
+  SUBID SUBSTANCE,
+  SBGVID REPORT_VARIANT,
+  LANGU LANGU,
+  EHSDOCCAT EHSDOC_TYPE,
+  INTVERSION REPORT_VERSION,
+  REPTYPE REPORT_TYPE,
+  REPSTATUS REPORT_STATUS,
+  DMSCAT DOC_SYSTEM_TYPE,
+  DMSKEY DOC_GENERIC_KEY,
+  VERSION VERSION,
+  SUBVERSION SUBVERSION,
+  VALDAT VALIDITY_DATE,
+  REQREASON REASON_REQUEST,
+  RELCHGFLG RELEVANT_CHANGE_MADE,
+  REM NOTE,
+  TO_DATE(FROM_UNIXTIME(UNIX_TIMESTAMP())) COPIED,
+  TO_DATE(FROM_UNIXTIME(UNIX_TIMESTAMP())) INSERTED
+FROM saifty_1_staging.STA_V_SOURCE_ESTDH;
+drop table saifty_1_staging.STA_USE_ESTDH;
+
+create table saifty_1_staging.STA_USE_ESTDH
+as
+select * from saifty_1_staging.STA_V_USE_ESTDH;
+
+
+drop view ehs_null_tables.STA_V_null_ESTDH;
+drop view saifty_1_staging.STA_V_CLEAN_ESTDH;
+drop view saifty_1_staging.STA_V_SOURCE_ESTDH;
+drop view saifty_1_staging.STA_V_USE_ESTDH

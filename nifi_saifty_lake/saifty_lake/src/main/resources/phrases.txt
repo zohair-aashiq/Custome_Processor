@@ -1,0 +1,386 @@
+drop view if exists saifty_1_staging.STA_V_USE_PHRASES;
+drop view if exists saifty_1_staging.STA_V_LOGIC_PHRASES;
+drop view if exists saifty_1_staging.STA_V_TMP_PHRASES_TEXTS;
+drop view if exists saifty_1_staging.STA_V_SOURCE_PHRASE_LONGTEXT;
+drop view if exists saifty_1_staging.STA_V_SOURCE_PHRASE_TEXT;
+drop view if exists saifty_1_staging.STA_V_SOURCE_PHRASE_HEADER;
+drop view if exists saifty_1_staging.STA_V_CLEAN_PHRASE_HEADER;
+drop view if exists saifty_1_staging.STA_V_CLEAN_PHRASE_TEXT;
+drop view if exists saifty_1_staging.STA_V_CLEAN_PHRASE_LONGTEXT;
+drop view if exists ehs_null_tables.STA_V_NULL_PHRASE_LONGTEXT;
+drop view if exists ehs_null_tables.STA_V_NULL_PHRASE_HEADER;
+drop view if exists ehs_null_tables.STA_V_NULL_PHRASE_TEXT;
+
+create view ehs_null_tables.STA_V_NULL_PHRASE_LONGTEXT
+AS
+select
+nullif(`function`, '') functionvar,
+nullif(LOGLOCKMOD, '') LOGLOCKMOD,
+nullif(EXTINFO, '') EXTINFO,
+cast(nullif(cast(PRIMARYKEY as string),'')as int) PRIMARYKEY,
+cast(nullif(cast(FOREIGNKEY as string),'')as int) FOREIGNKEY,
+cast(nullif(cast( FLGPRIMKEY as string),'')as int)  FLGPRIMKEY,
+cast(nullif(cast(FLGFRGNKEY as string),'')as int) FLGFRGNKEY,
+cast(nullif(cast(sequence as string),'')as int) sequence,
+cast(nullif(cast(REF_RECN as string),'')as int) REF_RECN,
+nullif(format_col, '') format_col,
+nullif(TEXT_LINE, '') TEXT_LINE,
+nullif(inserted, '') copied,
+nullif(inserted, '') inserted
+from
+ehs_base_tables.PHRASE_LONGTEXT;
+
+create  view ehs_null_tables.STA_V_NULL_PHRASE_HEADER
+as
+select
+nullif(`function`, '') `function`,
+nullif(LOGLOCKMOD, '') LOGLOCKMOD,
+nullif(EXTINFO, '') EXTINFO,
+cast(nullif(cast(PRIMARYKEY as string),'')as int) PRIMARYKEY,
+cast(nullif(cast(FOREIGNKEY as string),'')as int) FOREIGNKEY,
+cast(nullif(cast( FLGPRIMKEY as string),'')as int)  FLGPRIMKEY,
+cast(nullif(cast(FLGFRGNKEY as string),'')as int) FLGFRGNKEY,
+nullif(CLIENT , '') CLIENT,
+cast(nullif(cast(RECORD_NO as string),'')as int) RECORD_NO,
+nullif(CHNGSTATUS , '') CHNGSTATUS,
+nullif(VALID_FROM , '') VALID_FROM,
+nullif(VALID_TO , '') VALID_TO,
+nullif(chang_no, '') chang_no,
+nullif(DEL_IND, '') DEL_IND,
+nullif(PARK_IND , '') PARK_IND ,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,
+nullif(CHANGD_BY, '') CHANGD_BY,
+nullif(DATAORIGIN, '') DATAORIGIN,
+nullif(DATA_PROV , '') DATA_PROV,
+cast(nullif(cast(RECNO_ROOT as string),'')as int) RECNO_ROOT,
+nullif(phrase , '') phrase,
+cast(nullif(cast(PHRLIB as string),'')as int) PHRLIB,
+nullif(PHRGRP, '') PHRGRP,
+nullif(LANGU, '') LANGU,
+nullif(NOTE, '') NOTE,
+nullif(UEXIT_NAME, '') UEXIT_NAME,
+nullif(inserted, '') copied,
+nullif(inserted, '') inserted
+from
+ehs_base_tables.phrase_header;
+
+
+create view ehs_null_tables.STA_V_NULL_PHRASE_TEXT
+as
+select
+nullif(`function`, '') `function`,
+nullif(LOGLOCKMOD, '') LOGLOCKMOD,
+nullif(EXTINFO, '') EXTINFO,
+cast(nullif(cast(PRIMARYKEY as string),'')as int) PRIMARYKEY,
+cast(nullif(cast(FOREIGNKEY as string),'')as int) FOREIGNKEY,
+cast(nullif(cast( FLGPRIMKEY as string),'')as int)  FLGPRIMKEY,
+cast(nullif(cast(FLGFRGNKEY as string),'')as int) FLGFRGNKEY,
+nullif(CLIENT , '') CLIENT,
+cast(nullif(cast(RECORD_NO as string),'')as int) RECORD_NO,
+nullif(CHNGSTATUS , '') CHNGSTATUS,
+nullif(VALID_FROM , '') VALID_FROM,
+nullif(VALID_TO , '') VALID_TO,
+nullif(chang_no, '') chang_no,
+nullif(DEL_IND, '') DEL_IND,
+nullif(PARK_IND , '') PARK_IND ,
+nullif(created_on, '') created_on,
+nullif(CREATED_BY, '') CREATED_BY,
+nullif(changd_on, '') changd_on,
+nullif(CHANGD_BY, '') CHANGD_BY,
+nullif(DATAORIGIN, '') DATAORIGIN,
+nullif(DATA_PROV , '') DATA_PROV,
+cast(nullif(cast(RECNO_ROOT as string),'')as int) RECNO_ROOT,
+nullif(LANGU,'') LANGU,
+nullif(LANGU_ISO,'') LANGU_ISO,
+nullif(PHR_CODE,'') PHR_CODE,
+nullif(PHR_TEXT,'') PHR_TEXT,
+nullif(LONG_TEXT,'')  LONG_TEXT,
+nullif(NOTE,'')    NOTE,
+nullif(PHRGRAPHIC,'')   PHRGRAPHIC,
+nullif(PPSTATE,'')   PPSTATE,
+nullif(FORMAT_FLAG,'')   FORMAT_FLAG,
+nullif(inserted, '') copied,
+nullif(inserted, '') inserted
+from
+ehs_base_tables.phrase_text;
+
+
+CREATE view saifty_1_staging.STA_V_CLEAN_PHRASE_HEADER
+as
+  select
+      "sys" as SYSTEM,
+  `function`,
+ LOGLOCKMOD,
+ EXTINFO,
+PRIMARYKEY,
+FOREIGNKEY,
+ FLGPRIMKEY,
+ FLGFRGNKEY,
+ CLIENT,
+RECORD_NO,
+ CHNGSTATUS,
+cast(substring(from_unixtime(unix_timestamp(VALID_FROM, 'MM/dd/yyyy')),1,10) as DATE) VALID_FROM,
+cast(substring(from_unixtime(unix_timestamp(VALID_TO, 'MM/dd/yyyy')),1,10) as DATE) VALID_TO,
+ CHANG_NO,
+ DEL_IND,
+ PARK_IND,
+cast(substring(from_unixtime(unix_timestamp(created_on, 'MM/dd/yyyy')),1,10) as DATE) Created_on,
+ CREATED_BY,
+cast(substring(from_unixtime(unix_timestamp(changd_on, 'MM/dd/yyyy')),1,10) as DATE) changd_on,
+ CHANGD_BY,
+ DATAORIGIN,
+ DATA_PROV,
+RECNO_ROOT,
+REGEXP_REPLACE(phrase, '\-', '#')phrase,
+PHRLIB,
+ PHRGRP,
+NVL(TRIM(LANGU),'E') LANGU,
+nvl(TRIM(LANGU),LAIS0) LANGU_ISO,
+NOTE,
+UEXIT_NAME,
+    NVL(cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE),current_date()) copied,
+    NVL(cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyy-MM-dd')),1,10) as DATE),current_date()) inserted
+    from ehs_null_tables.sta_v_null_PHRASE_HEADER
+    LEFT OUTER JOIN ehs_null_tables.sta_v_null_langu
+          on(NVL(TRIM(LANGU),'E') = SPRAS)
+    WHERE
+     PRIMARYKEY IS NOT NULL AND
+     RECORD_NO IS NOT NULL;
+
+CREATE view saifty_1_staging.STA_V_CLEAN_PHRASE_LONGTEXT
+AS
+   select
+      "sys" as SYSTEM,
+      longtext.functionvar `function`,
+      longtext.LOGLOCKMOD,
+      longtext.EXTINFO,
+      longtext.PRIMARYKEY,
+      longtext.FOREIGNKEY,
+      longtext.FLGPRIMKEY,
+      longtext.FLGFRGNKEY,
+      longtext.sequence,
+      REPLACE(LTRIM(REPLACE(longtext.REF_RECN,'0', ' ')),' ', '0') REF_RECN,
+      concat_ws('',collect_list(longtext.TEXT_LINE)) as TEXT_LINE,
+      longtext.COPIED,
+      max(NVL(longtext.INSERTED,current_date())) inserted
+      from (select
+        "sys" as SYSTEM,  functionvar, LOGLOCKMOD, EXTINFO, PRIMARYKEY,FOREIGNKEY, FLGPRIMKEY, FLGFRGNKEY
+         ,REF_RECN,TEXT_LINE,sequence,
+       cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyyMMdd')),1,10) as DATE) COPIED,
+       min(cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyyMMdd')),1,10) as DATE)) INSERTED
+        from
+        ehs_null_tables.sta_v_null_PHRASE_LONGTEXT
+        WHERE PRIMARYKEY IS NOT NULL
+        group by functionvar,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,REF_RECN,TEXT_LINE,sequence
+        ,COPIED
+      ) longtext
+      group by
+      SYSTEM,
+      functionvar,
+      COPIED,
+      LOGLOCKMOD,
+      EXTINFO,
+      PRIMARYKEY,
+      FOREIGNKEY,
+      FLGPRIMKEY,
+      FLGFRGNKEY,
+      SEQUENCE,
+      REF_RECN;
+
+
+
+
+CREATE view saifty_1_staging.STA_V_CLEAN_PHRASE_TEXT
+as
+select
+      "sys" as SYSTEM,
+  `function`,
+ LOGLOCKMOD,
+ EXTINFO,
+PRIMARYKEY,
+FOREIGNKEY,
+ FLGPRIMKEY,
+ FLGFRGNKEY,
+ CLIENT,
+RECORD_NO,
+ CHNGSTATUS,
+  cast(substring(from_unixtime(unix_timestamp(VALID_FROM, 'yyyyMMdd')),1,10) as DATE) VALID_FROM,
+cast(substring(from_unixtime(unix_timestamp(VALID_TO,'yyyyMMdd')),1,10) as DATE) VALID_TO,
+ CHANG_NO,
+ DEL_IND,
+ PARK_IND,
+cast(substring(from_unixtime(unix_timestamp(created_on, 'yyyyMMdd')),1,10) as DATE) Created_on,
+ CREATED_BY,
+cast(substring(from_unixtime(unix_timestamp(changd_on, 'yyyyMMdd')),1,10) as DATE) changd_on,
+ CHANGD_BY,
+ DATAORIGIN,
+ DATA_PROV,
+RECNO_ROOT,
+nullif(NVL(TRIM(LANGU),'E'),'') LANGU,
+nullif(nvl(TRIM(LANGU),LAIS0),'') LANGU_ISO,
+ PHR_CODE,
+ PHR_TEXT,
+ LONG_TEXT,
+  NOTE,
+ PHRGRAPHIC,
+ PPSTATE,
+ FORMAT_FLAG,
+NVL(cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyyMMdd')),1,10) as DATE),current_date()) copied,
+    NVL(cast(substring(from_unixtime(unix_timestamp(CURRENT_DATE, 'yyyyMMdd')),1,10) as DATE),current_date()) inserted
+    from ehs_null_tables.sta_v_null_PHRASE_TEXT
+    LEFT OUTER JOIN ehs_null_tables.sta_v_null_langu
+      on(NVL(TRIM(LANGU),'E') = SPRAS)
+    WHERE
+       PRIMARYKEY IS NOT NULL AND
+       RECORD_NO IS NOT NULL
+      AND VALID_FROM IS NOT NULL;
+
+
+
+
+CREATE view saifty_1_staging.STA_V_SOURCE_PHRASE_HEADER
+as
+  select distinct
+      SYSTEM, `function`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,CREATED_BY,CHANGD_ON,CHANGD_BY,DATAORIGIN,DATA_PROV,RECNO_ROOT,PHRASE,PHRLIB,PHRGRP,LANGU,LANGU_ISO,NOTE,UEXIT_NAME,INSERTED,COPIED
+    from saifty_1_staging.STA_V_CLEAN_PHRASE_HEADER;
+
+
+
+
+CREATE view saifty_1_staging.STA_V_SOURCE_PHRASE_TEXT
+ as
+  select distinct
+      SYSTEM, `function`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,CLIENT,RECORD_NO,CHNGSTATUS,VALID_FROM,VALID_TO,CHANG_NO,DEL_IND,PARK_IND,CREATED_ON,CREATED_BY,CHANGD_ON,CHANGD_BY,DATAORIGIN,DATA_PROV,RECNO_ROOT,LANGU,LANGU_ISO,PHR_CODE,PHR_TEXT,LONG_TEXT,NOTE,PHRGRAPHIC,PPSTATE,FORMAT_FLAG,INSERTED
+,COPIED
+    from saifty_1_staging.STA_V_CLEAN_PHRASE_TEXT;
+
+
+CREATE view saifty_1_staging.STA_V_SOURCE_PHRASE_LONGTEXT
+ as
+  select distinct
+      SYSTEM, `function`,LOGLOCKMOD,EXTINFO,PRIMARYKEY,FOREIGNKEY,FLGPRIMKEY,FLGFRGNKEY,REF_RECN,TEXT_LINE,INSERTED
+,COPIED
+    from saifty_1_staging.STA_V_CLEAN_PHRASE_LONGTEXT;
+
+CREATE view saifty_1_staging.STA_V_TMP_PHRASES_TEXTS
+AS
+          select
+            max(t.INSERTED) INSERTED,
+            TEXT_LINE,
+             t.FLGFRGNKEY, t.FLGPRIMKEY, t.FOREIGNKEY, t.PRIMARYKEY,
+            t.EXTINFO, t.LOGLOCKMOD, t.`function`, t.REF_RECN, t.SYSTEM,
+            max(t.COPIED) COPIED
+            from (select distinct * from saifty_1_staging.STA_V_SOURCE_PHRASE_LONGTEXT where trim(TEXT_LINE) is not null) t
+            inner join saifty_1_staging.STA_V_TMP_PHRASES_ROWS lt
+              on(t.REF_RECN = lt.REF_RECN and t.SYSTEM = lt.SYSTEM)
+          group by
+            t.FLGFRGNKEY, t.FLGPRIMKEY, t.FOREIGNKEY, t.PRIMARYKEY,
+            t.EXTINFO, t.LOGLOCKMOD, t.`function`, t.REF_RECN, t.SYSTEM, lt.chars,t.TEXT_LINE;
+
+CREATE view saifty_1_staging.STA_V_LOGIC_PHRASES
+AS
+select stab.* from (
+select /* ORDERED */
+ph.system PHHE_SYSTEM,
+ph.RECORD_NO PHHE_RECORD_NO,
+ph.CHANG_NO PHHE_CHANG_NO,
+ph.DEL_IND PHHE_DEL_IND,
+ph.PARK_IND PHHE_PARK_IND,
+ph.CREATED_ON PHHE_CREATED_ON,
+ph.CREATED_BY PHHE_CREATED_BY,
+ph.CHANGD_ON PHHE_CHANGD_ON,
+ph.CHANGD_BY PHHE_CHANGD_BY,
+ph.DATAORIGIN PHHE_DATAORIGIN,
+ph.DATA_PROV PHHE_DATA_PROV,
+ph.RECNO_ROOT PHHE_RECNO_ROOT,
+ph.PHRASE PHHE_PHRASE,
+ph.PHRLIB PHHE_PHRLIB,
+ph.PHRGRP PHHE_PHRGRP,
+ph.LANGU PHHE_LANGU,
+ph.LANGU_ISO PHHE_LANGU_ISO,
+ph.NOTE PHHE_NOTE,
+ph.UEXIT_NAME PHHE_UEXIT_NAME,
+ph.INSERTED PHHE_INSERTED,
+pt.RECORD_NO PHTE_RECORD_NO,
+pt.DEL_IND PHTE_DEL_IND,
+pt.PARK_IND PHTE_PARK_IND,
+pt.CREATED_ON PHTE_CREATED_ON,
+pt.CREATED_BY PHTE_CREATED_BY,
+pt.CHANGD_ON PHTE_CHANGD_ON,
+pt.CHANGD_BY PHTE_CHANGD_BY,
+pt.DATAORIGIN PHTE_DATAORIGIN,
+pt.DATA_PROV PHTE_DATA_PROV,
+pt.RECNO_ROOT PHTE_RECNO_ROOT,
+pt.LANGU PHTE_LANGU,
+pt.LANGU_ISO PHTE_LANGU_ISO,
+pt.PHR_CODE PHTE_PHR_CODE,
+pt.PHR_TEXT PHTE_PHR_TEXT,
+pt.LONG_TEXT PHTE_LONG_TEXT,
+pt.NOTE PHTE_NOTE,
+pt.PHRGRAPHIC PHTE_PHRGRAPHIC,
+pt.PPSTATE PHTE_PPSTATE,
+pt.FORMAT_FLAG PHTE_FORMAT_FLAG,
+pt.INSERTED PHTE_INSERTED,
+pl.REF_RECN PHLT_REF_RECN,
+pl.TEXT_LINE PHLT_TEXT_LINE,
+pl.INSERTED PHLT_INSERTED
+from
+saifty_1_staging.sta_v_source_phrase_header ph inner join saifty_1_staging.sta_v_source_phrase_text pt
+  on(ph.record_no = pt.recno_root and ph.system = pt.system)
+  left outer join (select * from saifty_1_staging.sta_v_TMP_PHRASES_TEXTS) pl
+    on(pt.record_no = pl.REF_RECN and pt.system = pl.system)
+) stab;
+
+
+
+
+CREATE view saifty_1_staging.STA_V_USE_PHRASES  AS
+  select DISTINCT
+substr(PHHE_SYSTEM, 1, 3) SYSTEM,
+PHHE_RECORD_NO HEADER_RECORD_NO,
+PHHE_RECNO_ROOT HEADER_RECNO_ROOT,
+PHHE_PHRASE PHRASE,
+PHHE_PHRLIB PHRLIB,
+PHHE_PHRGRP PHRGROUP,
+PHHE_LANGU_ISO HEADER_LANGU,
+PHTE_RECORD_NO TEXT_RECORD_NO,
+PHTE_CREATED_ON CREATED_ON,
+PHTE_CREATED_BY CREATED_BY,
+PHTE_CHANGD_ON CHANGD_ON,
+PHTE_CHANGD_BY CHANGD_BY,
+PHTE_DATAORIGIN DATAORIGIN,
+PHTE_DATA_PROV DATA_PROV,
+PHTE_LANGU LAGU,
+PHTE_LANGU_ISO LANGU_ISO,
+PHTE_PHR_CODE PHRASE_CODE,
+PHTE_PHR_TEXT PHRASE_TEXT,
+PHTE_LONG_TEXT LONG_TEXT,
+PHTE_NOTE NOTE,
+PHTE_PHRGRAPHIC PHRGRAPHIC,
+PHTE_PPSTATE PPSTATE,
+PHTE_FORMAT_FLAG FORMAT_FLAG,
+PHTE_INSERTED INSERTED,
+PHLT_TEXT_LINE TEXT_LINE
+from saifty_1_staging.STA_V_LOGIC_PHRASES;
+
+
+drop table saifty_1_staging.STA_USE_PHRASES;
+
+create table saifty_1_staging.STA_USE_PHRASES
+as
+select * from saifty_1_staging.STA_V_USE_PHRASES;
+
+drop view saifty_1_staging.STA_V_USE_PHRASES;
+drop view saifty_1_staging.STA_V_LOGIC_PHRASES;
+drop view saifty_1_staging.STA_V_TMP_PHRASES_TEXTS;
+drop view saifty_1_staging.STA_V_SOURCE_PHRASE_LONGTEXT;
+drop view saifty_1_staging.STA_V_SOURCE_PHRASE_TEXT;
+drop view saifty_1_staging.STA_V_SOURCE_PHRASE_HEADER;
+drop view saifty_1_staging.STA_V_CLEAN_PHRASE_HEADER;
+drop view saifty_1_staging.STA_V_CLEAN_PHRASE_TEXT;
+drop view saifty_1_staging.STA_V_CLEAN_PHRASE_LONGTEXT;
+drop view ehs_null_tables.STA_V_NULL_PHRASE_LONGTEXT;
+drop view ehs_null_tables.STA_V_NULL_PHRASE_HEADER;
+drop view ehs_null_tables.STA_V_NULL_PHRASE_TEXT
