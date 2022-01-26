@@ -1,0 +1,5 @@
+drop table saifty_1_staging.STA_USE_IDENTIFIER_FULL;
+
+create table saifty_1_staging.STA_USE_IDENTIFIER_FULL
+as
+select * from saifty_1_staging.STA_V_USE_IDENTIFIER_FULL

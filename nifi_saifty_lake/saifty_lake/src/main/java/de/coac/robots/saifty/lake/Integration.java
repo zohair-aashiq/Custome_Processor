@@ -75,7 +75,7 @@ public class Integration {
     }
 
     public static void identifierIntegration(Statement stmt) throws SQLException {
-        Operations.materializeTable(stmt, "saifty_3_integration", "INTG_COMPOSITIONS", "INTG_V_IDENTIFIER");
+        Operations.materializeTable(stmt, "saifty_3_integration", "INTG_IDENTIFIER", "INTG_V_IDENTIFIER");
         Operations.deletionLogic("saifty_3_integration.intg_identifier", "saifty_4_core.identifier", "product_id", "product_id", stmt);
         String identifier = " INSERT INTO  saifty_4_core.IDENTIFIER "
                 + " ( "

@@ -15,13 +15,19 @@ public class Transform {
 
     public static void productTransform(Statement stmt) throws SQLException {
         Operations.materializeTable(stmt, "saifty_1_staging", "STA_PRODUCTS", "STA_V_PRODUCTS");
-        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_PRODUCTS_CHANGES", "TRA_V_PRODUCTS_CHANGES");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_PRODUCTS_DEDUP ", "TRA_V_PRODUCTS_DEDUP");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_PRODUCTS_READY ", "TRA_V_PRODUCTS_READY ");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_PRODUCTS", "TRA_V_PRODUCTS");
     }
 
     public static void propertiesTransform(Statement stmt) throws SQLException {
         Operations.materializeTable(stmt, "saifty_1_staging", "STA_DATA_HUB", "STA_V_DATA_HUB");
-        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_DATA_HUB_READY", "TRA_V_DATA_HUB_READY");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_PROPERTIES", "TRA_V_PROPERTIES");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_PROPERTIES_NO_PHRASES", "TRA_V_PROPERTIES_NO_PHRASES");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_DATA_HUB", "TRA_V_DATA_HUB");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_DATA_HUB", "TRA_V_DATA_HUB");
         Operations.materializeTable(stmt, "saifty_2_transform", "TRA_DATA_HUB_READY_NO_PHRASES", "TRA_V_DATA_HUB_READY_NO_PHRASES");
+        Operations.materializeTable(stmt, "saifty_2_transform", "TRA_DATA_HUB_READY", "TRA_V_DATA_HUB_READY");
     }
 
     public static void phrasesTransform(Statement stmt) throws SQLException {
